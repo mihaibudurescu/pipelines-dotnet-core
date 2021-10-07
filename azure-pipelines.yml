@@ -15,10 +15,19 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true/**/*.zip
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Visual Studio Enterprise Subscription(17c44c7c-c0e2-4842-a7a7-befa1fb9b0a0)'
     appType: 'webApp'
     WebAppName: 'opswebapp'
-    package: $(System.DefaultWorkingDirectory)/**/*.zip
+    package: $(System.DefaultWorkingDirectory)/**/*.zip   
+
